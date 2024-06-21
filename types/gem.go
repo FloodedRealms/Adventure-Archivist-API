@@ -1,35 +1,25 @@
 package types
 
-import "fmt"
-
 type Gem struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Value       int    `json:"value"`
-	Total       int    `json:"total"`
+	Id       int `json:"id"`
+	XPEarned int `json:"gem_xp"`
+	Loot     loot
 }
 
-func NewGem(n, d string, v, t int) *Gem {
-	return &Gem{
-		Name:        n,
-		Description: d,
-		Value:       v,
-		Total:       t,
+func NewGem(n, d string, v float64, number, id int) *Gem {
+	gem := Gem{
+		Id:   id,
+		Loot: *NewLoot(n, d, v, number),
 	}
+	gem.XPEarned = gem.TotalXPAmount()
+	return &gem
 }
 
-func (g *Gem) XPValue() int {
-	return g.Value
+func (g *Gem) Name() string {
+	return g.Loot.Name
 }
 
-func (g *Gem) GoldValue() float64 {
-	return float64(g.Value)
-}
-
-func (g *Gem) Summary() string {
-	if g.Description == "" {
-		return fmt.Sprintf("Recovered a %s. It is worth %d gold.", g.Name, g.Value)
-	}
-	return fmt.Sprintf("Recovered a %s worth %d gold. It %s.", g.Name, g.Value, g.Description)
+func (g *Gem) TotalXPAmount() int {
+	return g.Loot.TotalXPAmount()
 
 }
